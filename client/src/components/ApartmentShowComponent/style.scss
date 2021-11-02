@@ -1,0 +1,181 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100,200,300,400,500,600&display=swap");
+
+.apartment {
+  width: 100%;
+  max-width: 760px;
+  margin-bottom: 8px;
+}
+.apartment-top{
+  padding: 20px;
+}
+.apartment-header {
+  &__offer-title {
+    h1 {
+      font-family: "Roboto", sans-serif;
+      font-weight: 600;
+      font-size: 28px;
+    }
+    margin-bottom: 5px;
+  }
+  &__location-info {
+    font-family: "Roboto", sans-serif;
+    margin-bottom: 8px;
+  }
+  &__undegrounds {
+    margin-bottom: 8px;
+  }
+  &__undeground {
+    display: flex;
+    align-items: center;
+    list-style-type: none;
+    gap: 0.5rem;
+  }
+  &__undeground-link {
+    text-decoration: none;
+    color: #182930;
+    font-family: "Roboto", sans-serif;
+  }
+  &__undeground-icon {
+    position: relative;
+    top: -3px;
+  }
+  &__undeground-time {
+    color: #7a7a7a;
+    font-family: "Roboto", sans-serif;
+  }
+}
+
+.apartment-summary-description {
+  &__title {
+    font-family: "Roboto", sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  &__info-block {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  &__info-block-el {
+    display: flex;
+    flex-flow: column;
+  }
+  &__info-block-el-value {
+    font-family: "Roboto", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 28px;
+    text-align: left;
+    color: #182930;
+  }
+  &__info-block-el-title{
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    line-height: 22px;
+    text-align: left;
+    color: #7a7a7a;
+  }
+}
+
+.apartment-description{
+  &__text{
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    line-height: 22px;
+    text-align: left;
+    white-space: pre-wrap;
+    color: #121212;
+  }
+}
+.apartment-middle{
+  padding: 20px;
+}
+
+.apartment-image-container{
+  margin-bottom: 24px;
+}
+
+.apartment-swiper{
+  
+  .swiper-pagination{
+    display: flex;
+    margin: 0 auto;
+  
+  }
+ &__bullet{
+   width: 96px;
+  height: 96px;
+ }
+ &__bullet-img{
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+ }
+ &__bullet-img-wrapper{
+   width: 100%;
+   height: 100%;
+   overflow: hidden;
+   border-radius: 8px;
+ }
+}
+.swiper-el{
+  width: 100%;
+  height: 500px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+}
+
+.apartment-general-info-block{
+  padding: 20px;
+  &__list{
+    list-style: none;
+    width: 100%;
+  }
+&__title{
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.38;
+  color: #121212;
+  font-family: 'Roboto', sans-serif;
+  margin-bottom: 24px;
+}
+&__chars-item{
+  display: flex;
+  font-size: 16px;
+  line-height: 22px;
+  margin-bottom: 16px;
+}
+&__char-key{
+  flex:1 1  220px;
+  max-width: 220px;
+  color: #7a7a7a;
+  font-family: 'Roboto',sans-serif;
+}
+&__char-val{
+  color: #121212;
+  font-family: 'Roboto',sans-serif;
+}
+&__char-hint-box{
+  opacity: 1 !important;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0,  0.2) !important;
+}
+}
+
+.question-mark{
+  position: relative;
+  top: 3px;
+  margin-left: 8px;
+  color: #2b87db;
+  opacity: 0.5;
+  cursor: pointer;
+}
+.question-mark:hover{
+  opacity: 0.9;
+}
+
+.box{
+}
