@@ -17,6 +17,9 @@ import { TestInterceptorComponent } from './components/TestInterceptorComponent'
 import { TestVerstkaComponent } from './components/TestVerstkaComponent';
 import { ApartmentTableComponent } from './components/ApartmentTableComponent';
 import { ApartmentShowComponent } from './components/ApartmentShowComponent/ApartmentShowComponent';
+import { HomePageComponent } from './components/HomePageComponent/HomePageComponent';
+import { CardComponent } from './components/Card/CardComponent';
+import { ApartmentSearchComponent } from './components/ApartmentSearchComponent/ApartmentSearchComponent';
 
 const MainWrapper = styled.div`
   width: 100%;
@@ -29,7 +32,14 @@ export function App() {
     <MainWrapper >
       <Header/>
       <Switch>
-        <Route path="/apartments/show/">
+        <Route path="/" exact={true}>
+        <HomePageComponent/>
+        </Route>
+        <Route path="/search">
+          
+          <ApartmentSearchComponent/>
+        </Route>
+        <Route path="/apartments/show/:apartmentId" exact={true}>
           <ApartmentShowComponent/>
         </Route>
         <Route path="/test-verstka">

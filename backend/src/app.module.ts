@@ -17,17 +17,31 @@ import { GolemModule } from './golem/golem.module';
 
 import { Snap } from './entities/snap.entity';
 import { AgregateVersion } from './entities/AgreateVersion.entity';
+import { ImageEntity } from './entities/Image.entity';
+import { Subway } from './entities/Subway.entity';
+import { SubwayTimeInfo } from './entities/SubwayTimeInfo.entity';
 
 @Module({
   imports: [
-  TypeOrmModule.forRoot({
+TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
       port: 3306,
       username: 'root',
       password: '',
       database: 'apartment_with_mental_db',
-      entities: [Order,Apartment,Characteristic, Customer,Dragon, EventEntity, Snap,AgregateVersion],
+      entities: [
+        Subway,
+        SubwayTimeInfo,
+        Order, 
+        Apartment,
+        Characteristic, 
+        Customer,
+        Dragon, 
+        EventEntity, 
+        Snap,
+        AgregateVersion,
+        ImageEntity],
       synchronize: false,
     }),
     OrdersModule,
@@ -36,7 +50,7 @@ import { AgregateVersion } from './entities/AgreateVersion.entity';
     CharsModule,
     GolemModule,
   ],
-  controllers: [AppController ],
+  controllers: [AppController],
   providers: [AppService,CommandBus, QueryBus],
 })
 export class AppModule {}

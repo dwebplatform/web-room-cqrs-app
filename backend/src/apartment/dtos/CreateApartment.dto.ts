@@ -1,17 +1,12 @@
-import { Expose } from "class-transformer";
-import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString } from "class-validator";
+import { Expose, Type } from "class-transformer";
+import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString, ValidateIf } from "class-validator";
+import { APARTMENT_SALE_TYPE, RENT_TYPE } from "src/aggregate_like_classes/Apartment";
+
 enum CURRENCY {
-RUB="RUB",
-DOLLAR="DOLLAR"
+  RUB="RUB",
+  DOLLAR="DOLLAR"
 }
-enum APARTMENT_SALE_TYPE {
-  // Дом
-  HOUSE="HOUSE",
-  // Комната
-  ROOM="ROOM",
-  // Койко-место
-  BED_PLACE="BED_PLACE"
-}
+
 export class CreateApartmentDto {
   @Expose()
   @IsString()
@@ -22,6 +17,7 @@ export class CreateApartmentDto {
   @IsString()
   @IsNotEmpty()
   offerTitle: string;
+
   @Expose()
   @IsString()
   @IsNotEmpty()
@@ -32,8 +28,18 @@ export class CreateApartmentDto {
   apartmentSaleType: APARTMENT_SALE_TYPE;
 
   @Expose()
+  @IsEnum(RENT_TYPE)
+  rentType: RENT_TYPE;
+  
+  @Expose()
+  @IsNumber()
+  @ValidateIf((o)=>o.apartmentSaleType === APARTMENT_SALE_TYPE.APARTMENT_IN_NEW_BUILDING||o.apartmentSaleType=== APARTMENT_SALE_TYPE.APARTMENT_IN_SECONDARY)
+  roomsAmount: number;
+
+  @Expose()
   @IsEnum(CURRENCY)
   currency: CURRENCY;
+  
   @Expose()
   @IsArray()
   subways: string[];
@@ -42,6 +48,15 @@ export class CreateApartmentDto {
   @IsNumber()
   @IsPositive()
   priceForDay:number;
+
+  @Expose()
+  @IsNumber()
+  @IsPositive()
+  priceForMonth:number;
+  
+  @Expose()
+  @IsString()
+  priceInfo: string;
 
   @Expose()
   @IsArray()

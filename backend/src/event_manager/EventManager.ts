@@ -1,5 +1,5 @@
 import { Apartment } from "../aggregate_like_classes/Apartment";
-import { EVENT_TYPES } from "src/entities/event.entity"
+import { EVENT_TYPES } from "src/entities/event.entity";
 export const EventManager = {
   // TODO: event: сделать типом соответствующим данному
   [EVENT_TYPES.APARTMENT_UPDATED_NAME]:(event:any, state:Apartment):Apartment=>{
@@ -14,7 +14,13 @@ export const EventManager = {
     state.subways  = event.data.subways;
     state.images = event.data.images;
     state.chars = event.data.chars;
+    // если в сутки
     state.priceForDay = event.data.priceForDay;
+    // если в месяц то price for mounth:
+    state.priceForMonth = event.data.priceForMonth;
+    //информация о цене
+    state.priceInfo = event.data.priceInfo;
+    state.rentType = event.data.rentType;
     return state;
   }
     // далее будут обработчики событий квартире обновили цену, фотографию, метро, описание, добавили убрали характеристики и тд

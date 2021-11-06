@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Res, HttpException, HttpStatus, Param, Post, Body } from '@nestjs/common';
+import { Controller, Get, Query, Res, HttpException, HttpStatus, Param, Post, Body, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { GetApartmentById } from './queries/getApartmentById';
 import { ListApartmentQuery } from './queries/ListApartment';
@@ -6,13 +6,36 @@ import { CreateApartmentDto } from './dtos/CreateApartment.dto';
 import { CreateApartmentCommand } from './commands/createApartment.command';
 import { UpdateApartmentNameHandler, UpdateApartmentNameCommand } from './commands/updateApartment.command';
 import { GetAllApartment } from './queries/getAllApartments';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { storage } from 'src/utils/diskStorage';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ImageEntity } from 'src/entities/Image.entity';
+import { ApartmentFilterDto } from './dtos/ApartmentFilterDto';
+
+
+
 
 @Controller('apartments')
 export class ApartmentController {
 
-  constructor(private readonly commandBus: CommandBus, private readonly queryBus: QueryBus) { }
+  constructor(
+    @InjectRepository(ImageEntity) private readonly _imageRepo: Repository<ImageEntity>,
+    private readonly commandBus: CommandBus, private readonly queryBus: QueryBus) { }
 
   
+
+  
+  @Post('/upload')
+	@UseInterceptors(FileInterceptor("photo", { storage }))
+	async uploadSingle(@UploadedFile() file: Express.Multer.File) {
+    const imageEntity = new ImageEntity();
+    imageEntity.fileName = file.filename;
+    imageEntity.path = file.path;
+    imageEntity.originalName = file.originalname;
+    return  this._imageRepo.save(imageEntity);
+  
+  }
   @Post('/update-name')
   updateName(
     @Body('name') name: string,
@@ -21,6 +44,7 @@ export class ApartmentController {
   ){
     return this.commandBus.execute(new UpdateApartmentNameCommand(name,aggregateId,version));
   }
+
   @Post('/create')
   createApartment(@Body() createApartmentDto: CreateApartmentDto){
     // apartmentCreatedEvent
@@ -66,9 +90,10 @@ export class ApartmentController {
       throw new HttpException('Не удалось получить квартиры по данному id',HttpStatus.BAD_REQUEST);
     }
   }
-  @Get('/get-all-test')
-  getAll(){
-    return this.queryBus.execute(new GetAllApartment());
+
+  @Get('/search')
+  searchAll(@Query() query:ApartmentFilterDto){
+    return this.queryBus.execute(new GetAllApartment(query));
   }
 }
 

@@ -10,6 +10,10 @@ export enum KEY_VARIANTS {
   BOOL="BOOL",
 
 }
+export enum GROUP_VARIANTS {
+  SUMMARY="SUMMARY",
+  GENERAL="GENERAL"
+}
 @Entity()
 export class Characteristic extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -18,15 +22,23 @@ export class Characteristic extends BaseEntity {
   @Column()
   keyName: string;
 
+  @Column({default:false})
+  hasHint: boolean;
+
+  @Column({default:''})
+  hints: string;
   @Column({type:'enum', enum: KEY_VARIANTS, default: KEY_VARIANTS.STRING})
   valueType: KEY_VARIANTS;
+
+  @Column({type:'enum', enum:GROUP_VARIANTS,default: GROUP_VARIANTS.GENERAL})
+  groupValue: GROUP_VARIANTS;
 
   @Column({default:null})
   STRING_VALUE: string;
 
   @Column({default:null})
   BOOL_VALUE: boolean;
-  
+
   @Column({type:'json', default:null})
   ARRAY_VALUE: Array<any>;
 

@@ -25,10 +25,12 @@
     margin-bottom: 8px;
   }
   &__undeground {
-    display: flex;
+
+    display: inline-flex;
     align-items: center;
     list-style-type: none;
     gap: 0.5rem;
+    margin-right: 16px;
   }
   &__undeground-link {
     text-decoration: none;

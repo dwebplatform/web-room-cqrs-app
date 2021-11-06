@@ -22,7 +22,7 @@ export class ListApartmentHadler implements IQueryHandler<ListApartmentQuery> {
       const selectorFilter = {
         relations:[]
       };
-      if(filter.char && filter.char ==='true'){
+      if(filter.char && filter.char === 'true'){
         selectorFilter.relations.push('characteristics');
       }
       return this._repo.find(selectorFilter);
