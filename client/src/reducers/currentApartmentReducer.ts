@@ -1,6 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IApartment } from "../interfaces/apartment-interface";
-import { ChangeApartmentDescription, GetApartmentByIdAction, UploadApartmentFilesAction } from './../actions/apartmentActions';
+import { ChangeApartmentDescription, ChangeApartmentNameAction, GetApartmentByIdAction, UploadApartmentFilesAction } from './../actions/apartmentActions';
 
 
 export const initialState = {
@@ -11,10 +11,32 @@ export const initialState = {
 export const apartmentSlice = createSlice({
   name: "apartment",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    changeApartmentName(state, action:PayloadAction<{name:string}>){
+      if(!state.apartment){
+        return;
+      }
+      state.apartment.name = action.payload.name;
+    }
+  },
   extraReducers: (builder) => {
+
+    builder.addCase(ChangeApartmentNameAction.fulfilled,(state,{payload})=>{
+      if(!state.apartment){
+        return;
+      }
+      state.apartment.version = payload.data.version;
+    });
+
+    builder.addCase(ChangeApartmentNameAction.rejected,(state,{payload})=>{
+    
+    });
+    
     builder.addCase(UploadApartmentFilesAction.fulfilled,(state,{payload})=>{
-      
+        if(!state.apartment){
+          return;
+        }
+        state.apartment.version = payload.data.version;
     });
     builder.addCase(UploadApartmentFilesAction.rejected,(state,{payload})=>{
 
@@ -46,4 +68,6 @@ export const apartmentSlice = createSlice({
   }
 });
 
+
+export const {changeApartmentName} = apartmentSlice.actions;
 export const apartmentReducer = apartmentSlice.reducer;

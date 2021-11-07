@@ -2,8 +2,16 @@ import { Apartment } from "../aggregate_like_classes/Apartment";
 import { EVENT_TYPES } from "src/entities/event.entity";
 export const EventManager = {
   // TODO: event: сделать типом соответствующим данному
-  [EVENT_TYPES.APARTMENT_UPDATED_NAME]:(event:any, state:Apartment):Apartment=>{
+  
+  [EVENT_TYPES.ADD_IMAGES_TO_APARTMENT]:(event:any,state:Apartment):Apartment=>{
+
+    const images = [...new Set([...state.images,...event.data.imageIds])];
+    state.images = images;
+    return state;
+  },
+  [EVENT_TYPES.APARTMENT_NAME_CHANGED]:(event:any,state:Apartment):Apartment=>{
     state.name = event.data.name;
+
     return state;
   },
   [EVENT_TYPES.APARTMENT_CREATED]:(event:any,state:Apartment):Apartment=>{

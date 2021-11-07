@@ -10,6 +10,7 @@ import { EventManager } from "src/event_manager/EventManager";
 import { ImageEntity } from 'src/entities/Image.entity';
 import { SubwayTimeInfo } from './../../entities/SubwayTimeInfo.entity';
 import { Subway } from './../../entities/Subway.entity';
+import { AgregateVersion } from 'src/entities/AgreateVersion.entity';
 
 
 
@@ -23,7 +24,8 @@ export class ApartmentDomain {
     @InjectRepository(Characteristic) private readonly _charRepo: Repository<Characteristic>,
     @InjectRepository(SubwayTimeInfo) private readonly _subwayTimeInfoRepo: Repository<SubwayTimeInfo>,
     @InjectRepository(Subway) private readonly _subwayRepo: Repository<Subway>,
-    @InjectRepository(ImageEntity) private readonly _imageRepo: Repository<ImageEntity>){
+    @InjectRepository(ImageEntity) private readonly _imageRepo: Repository<ImageEntity>,
+    @InjectRepository(AgregateVersion) private readonly _aggregateVersionRepo: Repository<AgregateVersion>){
   }
 
   public async getSubways(ids: string[]){
@@ -93,8 +95,13 @@ export class ApartmentDomain {
     }
     finalResponse.images  = await this.getImages(curentState.images);
     finalResponse.subways  = await this.getSubways(curentState.subways);
-    console.log(finalResponse);
     finalResponse.id = aggregateId;
-    return   curentState;
+    const versionEntity = await this._aggregateVersionRepo.findOne({
+      where:{
+        aggregateId:aggregateId
+      }
+    })
+    finalResponse.version = versionEntity.version;
+    return   finalResponse;
   }
 }

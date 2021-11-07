@@ -16,4 +16,5 @@ export interface IApartment {
   images: string[];
   priceForDay:number;
   chars: IChar[];
+  version:number;
 }

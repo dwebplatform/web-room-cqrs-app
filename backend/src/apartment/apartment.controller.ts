@@ -12,6 +12,10 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ImageEntity } from 'src/entities/Image.entity';
 import { ApartmentFilterDto } from './dtos/ApartmentFilterDto';
+import { ChangeApartmentNameDto } from './dtos/ChangeApartmentDto';
+import { ChangeApartmentNameCommand } from './commands/changeApartmentName.command';
+import { AddApartmentImagesDto } from './dtos/addApartmentImagesDto';
+import { AddImagesToApartmentCommand } from './commands/addImagesToApartment';
 
 
 
@@ -22,9 +26,6 @@ export class ApartmentController {
   constructor(
     @InjectRepository(ImageEntity) private readonly _imageRepo: Repository<ImageEntity>,
     private readonly commandBus: CommandBus, private readonly queryBus: QueryBus) { }
-
-  
-
   
   @Post('/upload')
 	@UseInterceptors(FileInterceptor("photo", { storage }))
@@ -34,15 +35,27 @@ export class ApartmentController {
     imageEntity.path = file.path;
     imageEntity.originalName = file.originalname;
     return  this._imageRepo.save(imageEntity);
-  
+
   }
-  @Post('/update-name')
+  @Post('/change-name')
   updateName(
-    @Body('name') name: string,
-    @Body('aggregateId') aggregateId: string,
-    @Body('version') version: number,
+    @Body() changeApartmentNameDto: ChangeApartmentNameDto
   ){
-    return this.commandBus.execute(new UpdateApartmentNameCommand(name,aggregateId,version));
+    return this.commandBus.execute(new ChangeApartmentNameCommand(changeApartmentNameDto));
+  }
+
+
+  @Post('/add-images')
+  addImages(
+    @Body() addApartmentImagesDto:AddApartmentImagesDto
+  ){
+    return this.commandBus.execute(new AddImagesToApartmentCommand(addApartmentImagesDto));
+  }
+
+
+  @Post('/change-description')
+  updateDescription(){
+
   }
 
   @Post('/create')

@@ -71,7 +71,11 @@
     max-width: 156px;
     position: relative;
   }
-  
+  &__filters-item--third{
+    flex: 0 0 156px;
+    max-width: 156px;
+    position: relative;
+  }
   &__filters-item-room-dropdown.show{
     display: block;
   }

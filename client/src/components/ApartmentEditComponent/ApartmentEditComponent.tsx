@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useRef, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 
+import Dropzone from "react-dropzone";
+
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
@@ -11,15 +13,16 @@ import Alert from '@mui/material/Alert';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 
-import {CharListComponent} from './CharListComponent';
+import {CharListComponent} from '../CharListComponent';
 
-import { RootState } from '../store';
-import { ChangeApartmentDescription, GetApartmentByIdAction, UploadApartmentFilesAction } from './../actions/apartmentActions';
+import { RootState } from '../../store';
+import { ChangeApartmentDescription, ChangeApartmentNameAction, GetApartmentByIdAction, UploadApartmentFilesAction } from '../../actions/apartmentActions';
 
 import styled from 'styled-components';
-import { useFiles } from './ApartmentListComponent';
+import { useFiles } from '../ApartmentListComponent';
+import { changeApartmentName } from '../../reducers/currentApartmentReducer';
 
-
+import './style.scss'
 const TopContainer = styled(Box)`
   display: flex;
   gap: 1rem;
@@ -87,7 +90,7 @@ const Image = styled.img`
   height:100%;
   width:100%;
 `
-export const ApartmentDetailComponent = () => {
+export const ApartmentEditComponent = () => {
   const { apartment, error } = useSelector((state: RootState) => state.apartmentDetail);
 
   const { apartmentId } = useParams<{ apartmentId: string }>();
@@ -109,14 +112,13 @@ export const ApartmentDetailComponent = () => {
   const dispatch = useDispatch();
   const [curApartmentDescription, setCurApartmentDescription] = useState<any>(apartment?.description);  
   
-  const {upload, files, inputData, preloadedImages}= useFiles();
-
+  const [previews, setPreviews] =useState<any[]>([]);
+  const [storedFiles, setStoredFiles] = useState<any[]>([]);
   const handleUpload=()=>{
-   
     if(!apartment){
       return;
     }
-    dispatch(UploadApartmentFilesAction({id:apartment.id, files}));
+    dispatch(UploadApartmentFilesAction({id: apartment.id.toString(), version: apartment.version, files:storedFiles}));
   }
   const handleChangeDescription=()=>{
     if(!apartment){
@@ -127,17 +129,37 @@ export const ApartmentDetailComponent = () => {
   const goToCharsPanel=()=>{
     history.push('/chars-panel');
   }
+
+  const handleSaveApartmentName=()=>{
+    if(!apartment){
+      return;
+    }
+    dispatch(ChangeApartmentNameAction({
+      id: ""+apartment.id,
+      name: apartment.name,
+      version: apartment.version
+    }))
+  }
+  const handleChangeApartmentName=(name:string)=>{
+    if(!apartment){
+      return;
+    }
+    dispatch(changeApartmentName({name}));
+  }
+ 
   useEffect(() => {
     dispatch(GetApartmentByIdAction(apartmentId));
   }, [dispatch, apartmentId])
 
-
   if (error) {
     return <Alert severity='error'>{error.message}</Alert>
   }
+
   if (!apartment) {
     return null;
   }
+  console.log(apartment);
+
 
   return (
     <div>
@@ -148,9 +170,19 @@ export const ApartmentDetailComponent = () => {
               <Typography sx={{ fontSize: 18, fontWeight: 'bold' }} gutterBottom>
                 Квартира #{apartment.id}
               </Typography>
-              <Box style={{ display: 'flex' }}>
+              <Box >
                 <Typography sx={{ fontSize: 16, fontWeight: 'bold' }} gutterBottom>Название:&nbsp;</Typography>
-                <Typography> {apartment.name}</Typography>
+                <Box>
+                <TextField 
+                onBlur={(e)=>{
+                  handleSaveApartmentName();
+                }}
+                fullWidth={true} type="text" value={apartment.name}
+                  onChange={(e)=>{
+                    handleChangeApartmentName(e.target.value);
+                  }}
+                />
+</Box>
               </Box>
               <Box>
                 <Typography sx={{ fontSize: 16, fontWeight: 'bold' }} gutterBottom >Описание:</Typography>
@@ -183,25 +215,44 @@ export const ApartmentDetailComponent = () => {
              <AddPictureContainer >
               <AddPictureTitle >
                 <Box>
-                <Typography sx={{ fontSize: 18, fontWeight: 'bold' }}>Фотографии</Typography>
+                <Typography sx={{ fontSize: 18, fontWeight: 'bold' }}>Фотографии:</Typography>
                 </Box>
-                <Box>
-                  <Box>
-                    <input {...inputData()}/>
-                  </Box>
-                <Button onClick={(e)=>{
-                  upload(e);
-                }}>Добавить фотографии</Button>
-                </Box>
+                
               </AddPictureTitle>
-              <Box style={{display:'flex'}}>
-                {preloadedImages.map((filePath)=>{
-                  return <Box style={{width:'100px', height:'100px', display:'flex', gap:'6px'}} 
-                  key={filePath}><img style={{flex:'1'}} alt="квартира" src={filePath}/></Box>
-                })}
-              </Box>
+              <Box>
+                  <Dropzone
+                  multiple={false}
+                  
+                  onDrop={(acceptedFiles)=>{
+
+                    setStoredFiles([...storedFiles, acceptedFiles[0]]);
+                    const reader = new FileReader();
+                    reader.onload =()=>{
+                      setPreviews([...previews,reader.result]);
+                    }
+                    reader.readAsDataURL(acceptedFiles[0]);
+                  }}
+                  >
+                    {({ getRootProps, getInputProps })=>{
+                      return <Box
+                      {...getRootProps({ className: "dropzone" })}>
+                        <p>Перенесите сюда файлы</p>
+                        <input {...getInputProps()}/>
+                      </Box>
+                    }}
+                  </Dropzone>
+                </Box>
+                <Box style={{display:'flex', gap:'6px', marginBottom:'6px'}}>
+                  {
+                  previews.map((preview)=>{
+                    return (<Box key={preview} sx={{width:'200px'}}>
+                      <img style={{width:'100%',height:'100%', objectFit:'cover'}} src={preview} alt="preview"/>
+                    </Box>);
+                  })
+                  }
+                </Box>
               </AddPictureContainer>
-              <Button  onClick={()=>handleUpload()} color="success" variant="contained" disabled={files.length===0}>
+              <Button  onClick={()=>handleUpload()} color="success" variant="contained" >
                 Загрузить
               </Button>
             </ApartmentPictureWrapper>

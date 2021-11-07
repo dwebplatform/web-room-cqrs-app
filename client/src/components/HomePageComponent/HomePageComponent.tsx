@@ -62,6 +62,8 @@ export const HomePageComponent = () => {
   // APARTMENT_IN_SECONDARY="APARTMENT_IN_SECONDARY",
  
   const searchLink  = getSearchLink(currentSearchVariants,currentSearchRoomAmountVariants, rentType,{fromPrice, toPrice});
+  
+ 
   return (<section className="home-menu-section">
     <div className="home-menu-content">
       <div className="menu__title">
@@ -81,14 +83,24 @@ export const HomePageComponent = () => {
           }} className={`search-container__tabs-btn ${rentType==='DAY' ?"active":""}`}>Посуточно</div>
         </li>
         </ul>
-        <div className="search-container__filters" >
+        <div className="search-container__filters"
+        >
           {/* тип квартиры | комнаты если квартира */}
-          <div onBlur={()=>{
-            console.log('Ушел');
-        }} className="search-container__filters-item search-container__filters-item--first">
+          <div 
+            tabIndex={0}
+            onBlur={(e)=>{
+              // нажали вне
+              if(!e.currentTarget.contains(e.relatedTarget)){
+                setFirstDropDownShowed(false);
+              }
+            }}
+          className="search-container__filters-item search-container__filters-item--first">
             <button className={`search-container__filters-item-btn ${isFirstDropDownShowed ? 'active':''}`} onClick={()=>setFirstDropDownShowed(!isFirstDropDownShowed)}>{searchFieldValue()}</button>
             {/* popup: start */}
-            <div className={`search-container__filters-item-type-dropdown ${isFirstDropDownShowed ?'show':''}`}>
+            <div 
+              
+           
+            className={`search-container__filters-item-type-dropdown ${isFirstDropDownShowed ?'show':''}`}>
               <ul className="dropdown-container">
                 <li className="dropdown-container__item">
                   <ul className="dropdown-list">
@@ -128,7 +140,16 @@ export const HomePageComponent = () => {
             </div>
             {/* popup: end */}
           </div>
-          { hasFlats  && <div className="search-container__filters-item search-container__filters-item--second">
+          { hasFlats  && <div 
+          
+          tabIndex={0}
+          onBlur={(e)=>{
+            // нажали вне
+            if(!e.currentTarget.contains(e.relatedTarget)){
+              setAmountApartmentShowed(false);
+            }
+          }}
+          className="search-container__filters-item search-container__filters-item--second">
             <button className={`search-container__filters-item-btn ${isAmountApartmentDropDownShowed? "active" : ""}`} 
             onClick={()=>setAmountApartmentShowed(!isAmountApartmentDropDownShowed)}
             >{getRoomOfferTitle(searchRoomAmountVariants, currentSearchRoomAmountVariants)}</button>
@@ -147,7 +168,16 @@ export const HomePageComponent = () => {
             </div>
             </div>}
           {/* цена  квартиры диапозон*/}
-          <div className="search-container__filters-item search-container__filters-item--second">
+          <div 
+          
+          tabIndex={0}
+          onBlur={(e)=>{
+            // нажали вне
+            if(!e.currentTarget.contains(e.relatedTarget)){
+              setPriceDropDownShow(false);
+            }
+          }}
+          className="search-container__filters-item search-container__filters-item--third">
             <button className={`search-container__filters-item-btn ${isPriceDropDownShowed?"active":""}`} onClick={()=>setPriceDropDownShow(!isPriceDropDownShowed)}>Цена</button>
             {/* popup */}
             <div className={`search-container__price-dropdown ${isPriceDropDownShowed? 'show' :''}`}>

@@ -11,7 +11,7 @@ import { Header } from './components/Header';
 import { OrderListComponent } from "./components/OrderListComponent";
 import { OrderDetailComponent} from './components/OrderDetailComponent';
 import { ApartmentListComponent} from './components/ApartmentListComponent';
-import { ApartmentDetailComponent} from './components/ApartmentDetailComponent';
+import { ApartmentEditComponent} from './components/ApartmentEditComponent/ApartmentEditComponent';
 import { CharBoardComponent} from './components/CharBoardComponent';
 import { TestInterceptorComponent } from './components/TestInterceptorComponent';
 import { TestVerstkaComponent } from './components/TestVerstkaComponent';
@@ -60,8 +60,8 @@ export function App() {
       <Route  path='/chars-panel' exact={true}>
         <CharBoardComponent />
       </Route>
-      <Route path='/apartments/detail/:apartmentId' exact={true}>
-        <ApartmentDetailComponent />
+      <Route path='/apartments/edit/:apartmentId' exact={true}>
+        <ApartmentEditComponent />
       </Route>
       </Switch>
     </MainWrapper>

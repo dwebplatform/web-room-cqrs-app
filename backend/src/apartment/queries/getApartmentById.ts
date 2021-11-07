@@ -17,7 +17,6 @@ export class GetApartmentByIdHandler implements IQueryHandler<GetApartmentById>{
   ){}
   
   public async execute(query: GetApartmentById){
-    const apartment = await this.apartmentDomain.getApartment(query.apartmentId, true);
-    return apartment;
+    return await this.apartmentDomain.getApartment(query.apartmentId, true);
   }
 }
